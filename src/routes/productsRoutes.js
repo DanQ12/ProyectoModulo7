@@ -9,7 +9,7 @@ const router = Router();
 router.get("/", ctrl.getAll)
 router.get("/:id", ctrl.getById)
 
-//Ruteas privadas, admin controla el invbentario
+//Rutas privadas, admin controla el invbentario
 router.post("/", authMiddleware, requireRole("admin"), ctrl.create);
 router.put("/:id", authMiddleware, requireRole("admin"), ctrl.update);
 router.delete("/:id", authMiddleware, requireRole("admin"), ctrl.remove);

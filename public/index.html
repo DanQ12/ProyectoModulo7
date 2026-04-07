@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retail Aseo - Artículos de Higiene y Limpieza</title>
+    <link rel="stylesheet" href="CSS/styles.css">
+</head>
+
+<body>
+    <!--Header------------------------------------------------------------>
+    <header class="site-header">
+        <div class="container header-inner">
+            <div class="logo">
+                <span class="logo-icon">🧴</span>
+                <span class="logo-text">Retail
+                    <strong>Aseo</strong>
+                </span>
+            </div>
+
+            <nav class="main-nav" id="main-nav">
+                <a href="#catalogo">Catálogo</a>
+                <a href="#compras">Cómo comprar</a>
+                <a href="#contacto">Contacto</a>
+            </nav>
+
+            <div class="header-actions">
+                <button class="btn btn-outline btn-sm" id="btn-login">Iniciar Sesión</button>
+                <button class="cart-btn" id="cart-btn" title="Ver carrito">
+                    🛒<span class="cart-count" id="cart-count">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+
+    <!--Barra de estado (Solo para el desarrollo)------------------------->
+
+    <div class="status-bar" id="status-bar">
+        <div class="container">
+            <a href="/api/users" target="_blank" class="btn btn-outline btn-sm">Revisar Usuarios</a>
+        </div>
+    </div>
+
+    </main>
+
+
+    <!--Footer----------------------------------------------------------------------------->
+    <footer class="site-footer" id="contacto">
+        <div class="container footer-inner">
+            <div class="footer-brand">
+                <span class="logo-icon">🧴</span>
+                <strong>RetailAseo</strong>
+                <p>Artículos de higiene y limpieza para el hogar.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegación</h4>
+                <a href="#catalogo">Catálogo</a>
+                <a href="#compras">Cómo comprar</a>
+                <a href="/status" target="_blank">Estado API</a>
+            </div>
+
+            <div class="footer-contact">
+                <h4>Contacto</h4>
+                <p>📍 Av. Principal 1234, Chillan</p>
+                <p>📞 +56 9 1234 5678</p>
+                <p>✉️ quezada.dr1234@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 RetailAseo - Proyectos Módulo 6/7/8</p>
+        </div>
+    </footer>
+
+    <script src="/public/JS/main.js"></script>
+</body>
+</html>

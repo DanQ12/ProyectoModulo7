@@ -33,19 +33,91 @@
         </div>
     </header>
 
+    <!--Hero-------------------------------------------------------------->
+
+    <section class="hero">
+        <div class="container hero-inner">
+            <div class="hero-text">
+                <h1>Todo lo que necesitas <br>
+                    <span>en artículos de aseo</span>
+                </h1>
+
+                <p>Jabones, desinfectantes, shampoo, detergentes y más. <br>
+                Compra online - retira en tienda o recibelo en tu hogar.</p>
+                <div class="hero-badges">
+                    <span class="badge">🏪 Retiro a tienda</span>
+                    <span class="badge">🚚 Despacho a domicilio</span>
+                    <span class="badge">✅ Productos garantizados</span>
+                </div>
+                <a href="#catalogo" class="btn btn-primary">Ver catálogo</a>
+            </div>
+            <div class="hero-img">🧼</div>         
+        </div>
+    </section>
 
     <!--Barra de estado (Solo para el desarrollo)------------------------->
 
     <div class="status-bar" id="status-bar">
         <div class="container">
-            <a href="/api/users" target="_blank" class="btn btn-outline btn-sm">Revisar Usuarios</a>
+            Comprobando <servidor class="span" id="server-status"></servidor>
         </div>
     </div>
 
+    <!--Filtros/Catalogo-------------------------------------------------->
+
+    <main class="container main-content" id="catalogo">
+        <h2 class="section-title">Nuestro Catálogo</h2>
+
+        <div class="filters-row">
+            <input type="text" id="search-input" placeholder="Buscar producto..." class="input-field">
+            <select name="" id="category-filter" class="input-field">
+                <option value="">Todas las categorías</option>
+            </select>
+            <label class="checkbox-label">
+                <input type="checkbox" id="hide-expired" checked>
+                Ocultar vencidos
+            </label>
+        </div>
+
+        <!--Grid de productos-->
+        <div class="products-grid" id="products-grid">
+            <p class="loading-msg">Cargando productos...</p>
+        </div>
     </main>
 
+    <!--Como comprar------------------------------------------------------>
+    <section class="how-section" id="como-comprar">
+        <div class="container">
+            <h2 class="section-title">¿Cómo comprar?</h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-num">1</div>
+                    <h3>Elige tus productos</h3>
+                    <p>Navega el catálogo y agrega al carrito lo que necesitas.</p>
+                </div>
 
-    <!--Footer----------------------------------------------------------------------------->
+                <div class="step-card">
+                    <div class="step-num">2</div>
+                    <h3>Selecciona entrega</h3>
+                    <p>Escoge entre retiro en tienda o despacho a domicilo.</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-num">3</div>
+                    <h3>Confirma y paga</h3>
+                    <p>Ingresa tus datos, confirma el pedido y recibe tu número de orden.</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-num">4</div>
+                    <h3>¡LISTO!</h3>
+                    <p>Sigue el estado de tu pedido desde tu cuenta.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--Footer------------------------------------------------------------>
     <footer class="site-footer" id="contacto">
         <div class="container footer-inner">
             <div class="footer-brand">
@@ -72,6 +144,76 @@
         </div>
     </footer>
 
+    <!--Modal Carrito------------------------------------------------------->
+    <div class="modal-overlay" id="cart-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>🛒 Mi Carrito</h3>
+                <button class="modal-close" id="close-cart">X</button>
+            </div>
+            <div class="modal-body" id="cart-body">
+                <p class="empty-cart">Tu carrito está vacio</p>
+            </div>
+            <div class="modal-footer" id="cart-footer" style="display: none;">
+                <div class="cart-total">
+                    Total: <strong id="cart-total">$0</strong>
+                </div>
+                <div class="delivery-options">
+                    <label class="radio-label">
+                        <input type="radio" name="tipoEntrega" value="retiro" checked>🏪 Retiro en tienda
+                    </label>
+
+                    <label class="radio-label">
+                        <input type="radio" name="tipoEntrega" value="despacho" checked>🚚 Despacho a domicilio
+                    </label>
+                </div>
+
+                <div id="address-section" style="display: none;">
+                    <input type="text" id="address-input" class="input-field" placeholder="Direccion de entrega">
+                </div>
+
+                <button class="btn btn-primary btn-block" id="checkout-btn">Confirmar Pedido</button>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal Login------------------------------------------------------->
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal modal-sm">
+            <div class="modal-header">
+                <h3 id="auth-modal-title">Iniciar Sesión</h3>
+                <button class="modal-close" id="close-login">X</button>
+            </div>
+            <div class="modal-body">
+                <div id="login-form">
+                    <input type="email" id="login-email" class="input-field" placeholder="Email">
+                    <input type="password" id="login-password" class="input-field" placeholder="Contraseña">
+                    <button class="btn btn-primary btn-block" id="submit-login">Entrar</button>
+                    <p class="auth-switch">
+                        ¿No tienes cuenta?
+                        <a href="#" id="go-to-register">Regístrate aquí</a>
+                    </p>
+                </div>
+
+                <div id="register-form" style="display: none;">
+                    <input type="text" id="reg-name" class="input-field" placeholder="Nombre completo">
+                    <input type="email" id="reg-email" class="input-field" placeholder="Email">
+                    <input type="password" id="reg-password" class="input-field" placeholder="Constraseña">
+                    <input type="tel" id="reg-telefono" class="input-field" placeholder="Telefono (opcional)">
+                    <button class="btn btn-primary btn-block" id="submit-register">Registrarme</button>
+                    <p class="auth-switch">
+                        ¿Ya tienes cuenta?
+                        <a href="#" id="go-to-login">Inicia sesión</a>
+                    </p>
+                </div>
+                <p class="auth-msg" id="auth-msg"></p>
+            </div>
+        </div>
+    </div>
+    
+    <!--Toast de notificacion------------------------------------------------------->
+
+    <div class="toast" id="toast"></div>
     <script src="/public/JS/main.js"></script>
 </body>
 </html>

@@ -52,7 +52,13 @@ retail-aseo/
     │   ├── categoryRoutes.js # Rutas de categorías
     │   ├── orderRoutes.js    # Rutas de órdenes
     │   └── uploadsRoutes.js  # Rutas de subida de archivos
-    ├── controllers/          # Lógica de negocio
+    ├── controllers/
+    │   ├── authController.js       # Registro e inicio de sesión
+    │   ├── categoryController.js   # Listado y búsqueda de categorías
+    │   ├── orderController.js      # Gestión de pedidos y transacciones
+    │   ├── ProductController.js    # CRUD de productos con filtros
+    │   ├── uploadController.js     # Manejo de subida de archivos
+    │   └── userController.js       # Gestión de usuarios
     └── middleware/
         ├── authMiddleware.js  # Verificación JWT y roles
         ├── errorMiddleware.js # Manejo global de errores
@@ -150,6 +156,96 @@ Entrega asociada a una orden cuando el tipo de entrega es despacho.
 | Category → Product | 1 : N | Una categoría puede tener múltiples productos |
 | Product ↔ Order | N : M (via OrderItem) | Un producto puede aparecer en múltiples órdenes y viceversa |
 | Order → Delivery | 1 : 1 | Cada orden tiene como máximo una entrega |
+
+---
+
+## Controladores
+
+### `authController.js`
+
+Gestiona el registro e inicio de sesión de usuarios.
+
+| Función | Descripción |
+|---|---|
+| `register(req, res, next)` | Crea un nuevo usuario validando que `nombre`, `email` y `password` estén presentes. Verifica que el email no esté ya registrado (retorna `409` si existe). Retorna `200` con mensaje de éxito. |
+| `login(req, res, next)` | Valida las credenciales del usuario. Busca al usuario por email y retorna mensaje genérico `401` si no existe, para no revelar información sensible. |
+
+> **Bugs conocidos:** Los parámetros `res` y `req` están invertidos en `register`. No se genera ni retorna el JWT en ninguna de las dos funciones. La contraseña no se hashea antes de guardar.
+
+---
+
+### `categoryController.js`
+
+Listado y consulta de categorías con sus productos asociados.
+
+| Función | Descripción |
+|---|---|
+| `getAll(req, res, next)` | Lista todas las categorías ordenadas por nombre. Soporta búsqueda dinámica por nombre mediante el query param `?search=` (case-insensitive con `Op.iLike`). Incluye los productos asociados (`id`, `nombre`, `precio`, `stock`). |
+| `getById(req, res, next)` | Devuelve una categoría específica por ID con todos sus productos. Retorna `404` si no se encuentra. |
+
+> **Bug conocido:** En `getAll`, el `catch` tiene un error de sintaxis: `next/(err)` en lugar de `next(err)`, por lo que los errores no se propagan correctamente al middleware de errores.
+
+---
+
+### `orderController.js`
+
+Gestión completa de pedidos. Usa transacciones de Sequelize para garantizar la integridad de datos: si cualquier paso falla, se revierten todos los cambios.
+
+| Función | Descripción |
+|---|---|
+| `getAll(req, res, next)` | Lista pedidos ordenados por fecha de creación (más reciente primero). Los administradores ven todos los pedidos; los clientes solo ven los suyos. Incluye datos del usuario, items con producto, y entrega. |
+| `getById(req, res, next)` | Devuelve un pedido específico por ID. Retorna `404` si no existe. Retorna `403` si un cliente intenta acceder a un pedido ajeno. Incluye usuario, items y entrega. |
+| `create(req, res, next)` | Crea un pedido en 5 pasos atómicos dentro de una transacción: (1) valida stock de cada producto, (2) crea la orden, (3) crea los `OrderItem`, (4) descuenta el stock, (5) crea el `Delivery` si el tipo es `"despacho"`. La fecha estimada de entrega se calcula en +3 días. Retorna `201` con la orden completa. |
+| `updateEstado(req, res, next)` | Actualiza el campo `estado` de una orden. Solo accesible para administradores. Retorna `404` si el pedido no existe. |
+
+> **Bug conocido:** Los parámetros `res` y `req` están invertidos en `getById`, lo que impide acceder correctamente al body y params de la petición.
+
+**Body esperado para `create`:**
+```json
+{
+  "items": [
+    { "productId": 1, "cantidad": 2 }
+  ],
+  "tipoEntrega": "despacho",
+  "direccionEntrega": "Av. Ejemplo 123"
+}
+```
+
+---
+
+### `ProductController.js`
+
+CRUD completo de productos con soporte para filtros en el listado.
+
+| Función | Descripción |
+|---|---|
+| `getAll(req, res, next)` | Lista todos los productos ordenados por nombre. Soporta los query params `?search=`, `?category=`, `?minPrice=` y `?maxPrice=` para filtrar resultados. Incluye la categoría asociada. |
+| `getById(req, res, next)` | Devuelve un producto por ID con su categoría. Retorna `404` si no existe. |
+| `create(req, res, next)` | Crea un nuevo producto. Requiere `nombre` y `precio`. El `stock` se inicializa en `0` si no se provee. |
+| `update(req, res, next)` | Actualiza los campos de un producto existente con los datos del body. Retorna `404` si no existe. |
+| `remove(req, res, next)` | Elimina un producto por ID. Retorna `404` si no existe. |
+
+> **Bug conocido:** El filtro de precio en `getAll` construye `where.precio` como un array en lugar de un objeto, por lo que `Op.gte` y `Op.lte` no se aplican correctamente. El campo se llama `descripcion` en el modelo pero se lee como `description` desde el body en `create`.
+
+---
+
+### `uploadController.js`
+
+Actualmente vacío. Destinado al manejo de subida de imágenes para productos y avatares de usuario mediante Multer.
+
+---
+
+### `userController.js`
+
+Gestión de usuarios mediante una combinación de SQL directo y ORM.
+
+| Función | Descripción |
+|---|---|
+| `getUsers(req, res, next)` | Obtiene la lista de usuarios con sus campos `id`, `nombre`, `email` y `telefono` usando una query SQL directa. La contraseña queda excluida de forma explícita. |
+| `updateUser(req, res, next)` | Actualiza los datos de un usuario por ID usando el ORM de Sequelize. Retorna `404` si no existe. |
+| `deleteUser(req, res, next)` | Elimina un usuario por ID. Retorna `404` si no existe. |
+
+> **Nota:** `getUsers` y `updateUser`/`deleteUser` usan enfoques distintos de acceso a datos (SQL raw vs. ORM) dentro del mismo controlador. Se recomienda unificar usando Sequelize para mayor consistencia.
 
 ---
 
@@ -306,8 +402,12 @@ Al iniciar, Sequelize se conecta a PostgreSQL, autentica las credenciales y sinc
 
 | Archivo | Problema | Descripción |
 |---|---|---|
-| `uploadsRoutes.js` | Error de importación | Usa `{Routes}` en vez de `{Router}` desde express |
-| `orderRoutes.js` | Typo en middleware | `authMiddlewate` debería ser `authMiddleware` |
-| `errorMiddleware.js` | ReferenceError | `status: error` debería ser `status: "error"` |
-| `Delivery.js` | Typo en ENUM | `"prepearando"` debería ser `"preparando"` |
-| `Order.js` | Typo en ENUM | `"depacho"` debería ser `"despacho"` en `tipoEntrega` |
+| `authController.js` | JWT no generado | `login` no firma ni retorna el token JWT |
+| `authController.js` | Contraseña sin hashear | La password se guarda en texto plano; falta integrar bcrypt |
+
+
+##Funcionamiento
+
+De momento las funciones de la app todavian no se conectan con el FrontEnd, esto se realizara durante el modulo 8, ya que esta mas en linea con su contenido. De momento la fomra de llevar a cabo las operaciones es mediante el uso de Fetch o herramientas como Postman, ejemplos de estos fetch se dejaron comentados en el codigo de app.js.
+
+Tambien como parte de esa misma filosofia, se dejaron los errores señalados arriba, ya que el uso completo de JWT tambien es parte del siguietne modulo y se corregiran en la Parte 3 del proyecto.

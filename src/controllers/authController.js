@@ -2,7 +2,7 @@
 const {User} = require("../models")
 
 //Crea un usuario nuevo, oculta la informacion de su contraseña y devuelve un JWT
-async function register(res, req, next){
+async function register(req, res, next){
     try{
         const {nombre, email, password, telefono} = req.body;
 

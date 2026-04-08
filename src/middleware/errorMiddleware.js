@@ -29,7 +29,7 @@ function errorMiddleware (err, req, res, next) {
     const statusCode = err.statusCode || err.status || 500;
 
     res.status(statusCode).json({
-        status: error,
+        status: "error",
         message: err.message,
         data: null
     })

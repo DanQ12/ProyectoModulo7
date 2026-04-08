@@ -18,7 +18,7 @@ const Order = sequelize.define("Order", {
         defaultValue: "pendiente"
     },
     tipoEntrega:{
-        type: DataTypes.ENUM("retiro", "depacho"),
+        type: DataTypes.ENUM("retiro", "despacho"),
         allowNull: false,
         field: "tipo_entrega"
     },

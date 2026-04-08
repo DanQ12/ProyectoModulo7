@@ -66,8 +66,7 @@ async function startServer(){
         await sequelize.sync({alter: true});
         console.log("✅ Modelos sincronizados con la base de datos")
 
-    
-
+        
 
         app.listen(PORT, ()=>{
             console.log(`\n 🚀 Servidor iniciado: http://localhost:${PORT}`)
@@ -76,6 +75,21 @@ async function startServer(){
             console.log(`🔌 API: http://localhost:${PORT}/api`);
             console.log(`🌍 Entorno: ${process.env.NODE_ENV || 'development'}\n`)
         })
+
+        /* await fetch(`http://localhost:${PORT}/api/users/2`,{
+            method: "PUT",
+            headers: {'Content-type': 'application/json',
+                    'Accept': 'application/json'
+            },
+            body: JSON.stringify({nombre: 'Valentina'})
+        }) */
+
+        /* await fetch(`http://localhost:${PORT}/api/users/3`,{
+            method: "DELETE",
+            headers: {'Content-type': 'application/json',
+                    'Accept': 'application/json'
+            },
+        }) */
 
     }catch(err){
         console.error("❌ Error al iniciar el servidor: ", err.message);

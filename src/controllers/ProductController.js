@@ -19,7 +19,7 @@ async function getAll(req, res, next) {
         }
 
         if(minPrice || maxPrice){
-            where.precio = [];
+            where.precio = {};
             if(minPrice){
                 where.precio[Op.gte] = parseFloat(minPrice)
             }
@@ -71,7 +71,7 @@ async function getById(req,res,next){
 
 async function create(req,res,next){
     try{
-        const {nombre, description, precio, stock, fechaVencimiento, categoryId} = req.body;
+        const {nombre, descripcion, precio, stock, fechaVencimiento, categoryId} = req.body;
 
         if(!nombre || precio === undefined){
             return res.status(400).json({
@@ -83,7 +83,7 @@ async function create(req,res,next){
 
         const product = await Product.create({
             nombre,
-            description,
+            descripcion,
             precio,
             stock: stock || 0,
             fechaVencimiento: fechaVencimiento || null,

@@ -28,7 +28,7 @@ async function getAll(req, res, next){
             data: categories
         })
     }catch(err){
-        next/(err)
+        next(err)
     }
 }
 

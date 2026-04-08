@@ -27,7 +27,7 @@ async function getAll(req,res,next){
     }
 }
 
-async function getById(res,req,next) {
+async function getById(req,res,next) {
     try{
         const order = await Order.findByPk(req.params.id, {
             include:[

@@ -10,7 +10,7 @@ const Delivery = sequelize.define("Delivery",{
         primaryKey: true
     },
     estado: {
-        type: DataTypes.ENUM("prepearando", "en_camino", "entregado", "fallido"),
+        type: DataTypes.ENUM("preparando", "en_camino", "entregado", "fallido"),
         defaultValue: "preparando"
     },
     direccion: {

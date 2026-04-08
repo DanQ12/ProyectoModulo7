@@ -5,7 +5,7 @@
     const categoryRoutes = require("./categoryRoutes")
     const orderRoutes = require("./orderRoutes")
     const productsRoutes = require("./productsRoutes")
-    const uploadsRoutes = require("./uploadsRoutes")
+    //const uploadsRoutes = require("./uploadsRoutes")
     const userRoutes = require("./userRoutes")
 
     const router = Router()
@@ -15,7 +15,7 @@
     router.use("/categories", categoryRoutes)
     router.use("/orders", orderRoutes)
     router.use("/products", productsRoutes)
-    router.use("/uploads", uploadsRoutes)
+    //router.use("/uploads", uploadsRoutes)
     router.use("/users", userRoutes)
     
     module.exports = router;

@@ -1,11 +1,11 @@
 const {Router} = require("express")
-const ctrl = require ("../controllers/orderController")
-const {authMiddlewate, requireRole} = require("../middleware/authMiddleware")
+const ctrl = require("../controllers/orderController")
+const {authMiddleware, requireRole} = require("../middleware/authMiddleware")
 
 const router = Router();
 
 //todas las rutas necesitan autentificacion
-router.use(authMiddlewate);
+router.use(authMiddleware);
 
 router.get("/",ctrl.getAll);
 router.get("/:id", ctrl.getById);

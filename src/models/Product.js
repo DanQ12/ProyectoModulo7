@@ -46,7 +46,7 @@ const Product = sequelize.define("Product",{
         type: DataTypes.INTEGER,
         allowNull: true,
         field: "category_id",
-        references: {model: "categories", key: "id"}
+        references: {model: "categorias", key: "id"}
     }
 },{
     tableName: "products",

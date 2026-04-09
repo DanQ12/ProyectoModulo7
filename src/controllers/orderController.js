@@ -73,7 +73,12 @@ async function getById(req,res,next) {
 
 async function create(req, res, next){
     //comienza la trasnsaccion
+
+    console.log({Order, OrderItem, Product, User, Delivery, sequelize})
+
     const t = await sequelize.transaction();
+
+    
 
     try{
         const {items, tipoEntrega, direccionEntrega} = req.body;
@@ -93,6 +98,7 @@ async function create(req, res, next){
 
         for(const item of items){
             const product = await Product.findByPk(item.productId, {transaction: t});
+
 
             if(!product){
                 await t.rollback();
@@ -118,13 +124,14 @@ async function create(req, res, next){
 
         //Paso 2
         const order = await Order.create({
-            userId: req.user.id,
+            userId:   req.user.id,  /* 2,  user id hardcodeada para pruebas*/
             total,
             tipoEntrega: tipoEntrega || "retiro",
             direccionEntrega: tipoEntrega === "despacho" ? direccionEntrega: null
         },{
             transaction: t
         })
+
 
         //Paso 3 y 4
         for(const {product, cantidad} of itemsData){
@@ -174,7 +181,7 @@ async function create(req, res, next){
     }catch(err){
         await t.rollback() //en casod e error deshace todos los cambios
         next(err)
-    }
+    } 
 }
 
 //Actualizar el estado del pedido, solo accesible a admin

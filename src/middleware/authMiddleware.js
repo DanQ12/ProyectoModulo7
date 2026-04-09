@@ -13,7 +13,7 @@ function authMiddleware(req,res,next){
     if(!authHeader || !authHeader.startsWith("Bearer ")){
         return res.status(401).json({
             status: "error",
-            message: "Acceso denegado. Token de autenticazion necesario",
+            message: "Acceso denegado. Token de autenticacion necesario",
             data: null
         })
     }

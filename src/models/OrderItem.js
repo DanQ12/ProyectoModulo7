@@ -1,6 +1,6 @@
 //Modelo de cada item en una orden
 
-const {DataTypes, DATE} = require("sequelize")
+const {DataTypes} = require("sequelize")
 const sequelize = require("../config/database")
 
 const OrderItem = sequelize.define("OrderItem",{

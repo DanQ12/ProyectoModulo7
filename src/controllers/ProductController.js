@@ -76,7 +76,7 @@ async function create(req,res,next){
         if(!nombre || precio === undefined){
             return res.status(400).json({
                 status: "error",
-                message: "Nombre y preico obligatorio",
+                message: "Nombre y precio obligatorio",
                 data: null
             })
         }

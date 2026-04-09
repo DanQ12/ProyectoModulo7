@@ -31,7 +31,7 @@ async function register(req, res, next){
             telefono: telefono || null
         })
 
-        res.status(200).json({
+        res.status(201).json({
             status: "succes",
             message: "Usuario registrado exitosamente.",
             data: null

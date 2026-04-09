@@ -27,7 +27,7 @@ const Delivery = sequelize.define("Delivery",{
         allowNull: true
     },
     //Clave foranea de la orden equivalente
-    orderID:{
+    orderId:{
         type: DataTypes.INTEGER,
         allowNull: false,
         unique: true,
